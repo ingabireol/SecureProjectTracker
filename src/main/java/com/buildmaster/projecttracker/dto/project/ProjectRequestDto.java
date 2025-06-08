@@ -1,4 +1,4 @@
-package com.buildmaster.projecttracker.dto;
+package com.buildmaster.projecttracker.dto.project;
 
 import com.buildmaster.projecttracker.model.ProjectStatus;
 import jakarta.validation.constraints.NotBlank;
@@ -9,8 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
-
 // Request DTO for creating/updating projects
 @Data
 @NoArgsConstructor
