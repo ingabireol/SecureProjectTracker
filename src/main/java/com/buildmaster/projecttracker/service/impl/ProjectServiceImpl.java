@@ -4,9 +4,7 @@ import com.buildmaster.projecttracker.dto.project.ProjectDetailResponseDto;
 import com.buildmaster.projecttracker.dto.project.ProjectRequestDto;
 import com.buildmaster.projecttracker.dto.project.ProjectResponseDto;
 import com.buildmaster.projecttracker.dto.project.TaskSummaryDto;
-import com.buildmaster.projecttracker.model.Project;
-import com.buildmaster.projecttracker.model.ProjectStatus;
-import com.buildmaster.projecttracker.model.Task;
+import com.buildmaster.projecttracker.model.*;
 import com.buildmaster.projecttracker.repository.ProjectRepository;
 import com.buildmaster.projecttracker.service.AuditLogService;
 import com.buildmaster.projecttracker.service.ProjectService;
@@ -53,7 +51,7 @@ public class ProjectServiceImpl implements ProjectService {
         
         // Log the creation
         Map<String, Object> payload = createProjectPayload(savedProject);
-        auditLogService.logAction("CREATE", "PROJECT", savedProject.getId(), actorName, payload);
+        auditLogService.logAction(AuditAction.CREATE, EntityType.PROJECT, savedProject.getId(), actorName, payload);
         
         log.info("Project created successfully with ID: {}", savedProject.getId());
         return convertToResponseDto(savedProject);
@@ -82,7 +80,7 @@ public class ProjectServiceImpl implements ProjectService {
         Map<String, Object> payload = new HashMap<>();
         payload.put("oldData", oldData);
         payload.put("newData", createProjectPayload(updatedProject));
-        auditLogService.logAction("UPDATE", "PROJECT", updatedProject.getId(), actorName, payload);
+        auditLogService.logAction(AuditAction.UPDATE, EntityType.PROJECT, updatedProject.getId(), actorName, payload);
         
         log.info("Project updated successfully with ID: {}", updatedProject.getId());
         return convertToResponseDto(updatedProject);
@@ -102,7 +100,7 @@ public class ProjectServiceImpl implements ProjectService {
         projectRepository.delete(project);
         
         // Log the deletion
-        auditLogService.logAction("DELETE", "PROJECT", projectId, actorName, payload);
+        auditLogService.logAction(AuditAction.DELETE, EntityType.PROJECT, projectId, actorName, payload);
         
         log.info("Project deleted successfully with ID: {}", projectId);
     }

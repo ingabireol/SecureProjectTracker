@@ -1,10 +1,7 @@
 package com.buildmaster.projecttracker.service.impl;
 
 import com.buildmaster.projecttracker.dto.task.*;
-import com.buildmaster.projecttracker.model.Developer;
-import com.buildmaster.projecttracker.model.Project;
-import com.buildmaster.projecttracker.model.Task;
-import com.buildmaster.projecttracker.model.TaskStatus;
+import com.buildmaster.projecttracker.model.*;
 import com.buildmaster.projecttracker.repository.DeveloperRepository;
 import com.buildmaster.projecttracker.repository.ProjectRepository;
 import com.buildmaster.projecttracker.repository.TaskRepository;
@@ -58,7 +55,7 @@ public class TaskServiceImpl implements TaskService {
         
         // Log the creation
         Map<String, Object> payload = createTaskPayload(savedTask);
-        auditLogService.logAction("CREATE", "TASK", savedTask.getId(), actorName, payload);
+        auditLogService.logAction(AuditAction.CREATE, EntityType.TASK, savedTask.getId(), actorName, payload);
         
         log.info("Task created successfully with ID: {}", savedTask.getId());
         return convertToResponseDto(savedTask);
@@ -104,7 +101,7 @@ public class TaskServiceImpl implements TaskService {
         Map<String, Object> payload = new HashMap<>();
         payload.put("oldData", oldData);
         payload.put("newData", createTaskPayload(updatedTask));
-        auditLogService.logAction("UPDATE", "TASK", updatedTask.getId(), actorName, payload);
+        auditLogService.logAction(AuditAction.UPDATE, EntityType.TASK, updatedTask.getId(), actorName, payload);
         
         log.info("Task updated successfully with ID: {}", updatedTask.getId());
         return convertToResponseDto(updatedTask);
@@ -124,7 +121,7 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.delete(task);
         
         // Log the deletion
-        auditLogService.logAction("DELETE", "TASK", taskId, actorName, payload);
+        auditLogService.logAction(AuditAction.DELETE, EntityType.TASK, taskId, actorName, payload);
         
         log.info("Task deleted successfully with ID: {}", taskId);
     }
@@ -228,7 +225,7 @@ public class TaskServiceImpl implements TaskService {
         payload.put("taskId", taskId);
         payload.put("oldDeveloperId", oldDeveloperId);
         payload.put("newDeveloperId", developerId);
-        auditLogService.logAction("UPDATE", "TASK", taskId, actorName, payload);
+        auditLogService.logAction(AuditAction.UPDATE, EntityType.TASK, taskId, actorName, payload);
         
         return convertToResponseDto(updatedTask);
     }
@@ -251,7 +248,7 @@ public class TaskServiceImpl implements TaskService {
         payload.put("action", "UNASSIGN_TASK");
         payload.put("taskId", taskId);
         payload.put("oldDeveloperId", oldDeveloperId);
-        auditLogService.logAction("UPDATE", "TASK", taskId, actorName, payload);
+        auditLogService.logAction(AuditAction.UPDATE, EntityType.TASK, taskId, actorName, payload);
         
         return convertToResponseDto(updatedTask);
     }
@@ -271,7 +268,7 @@ public class TaskServiceImpl implements TaskService {
         payload.put("taskIds", taskIds);
         payload.put("developerId", developerId);
         payload.put("updatedCount", updatedCount);
-        auditLogService.logAction("UPDATE", "TASK", null, actorName, payload);
+        auditLogService.logAction(AuditAction.UPDATE,EntityType.TASK, null, actorName, payload);
         
         return updatedCount;
     }
@@ -291,7 +288,7 @@ public class TaskServiceImpl implements TaskService {
         payload.put("projectId", projectId);
         payload.put("status", status);
         payload.put("updatedCount", updatedCount);
-        auditLogService.logAction("UPDATE", "TASK", null, actorName, payload);
+        auditLogService.logAction(AuditAction.UPDATE,EntityType.TASK, null, actorName, payload);
         
         return updatedCount;
     }
@@ -333,7 +330,7 @@ public class TaskServiceImpl implements TaskService {
         payload.put("taskIds", taskIds);
         payload.put("updateData", updateDto);
         payload.put("updatedCount", updatedTasks.size());
-        auditLogService.logAction("UPDATE", "TASK", null, actorName, payload);
+        auditLogService.logAction(AuditAction.UPDATE, EntityType.TASK, null, actorName, payload);
         
         return updatedTasks.stream()
                 .map(this::convertToResponseDto)

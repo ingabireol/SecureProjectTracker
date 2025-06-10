@@ -2,7 +2,9 @@ package com.buildmaster.projecttracker.service.impl;
 
 import com.buildmaster.projecttracker.dto.developer.*;
 import com.buildmaster.projecttracker.dto.project.TaskSummaryDto;
+import com.buildmaster.projecttracker.model.AuditAction;
 import com.buildmaster.projecttracker.model.Developer;
+import com.buildmaster.projecttracker.model.EntityType;
 import com.buildmaster.projecttracker.model.Task;
 import com.buildmaster.projecttracker.repository.DeveloperRepository;
 import com.buildmaster.projecttracker.repository.TaskRepository;
@@ -58,7 +60,7 @@ public class DeveloperServiceImpl implements DeveloperService {
         
         // Log the creation
         Map<String, Object> payload = createDeveloperPayload(savedDeveloper);
-        auditLogService.logAction("CREATE", "DEVELOPER", savedDeveloper.getId(), actorName, payload);
+        auditLogService.logAction(AuditAction.CREATE, EntityType.DEVELOPER, savedDeveloper.getId(), actorName, payload);
         
         log.info("Developer created successfully with ID: {}", savedDeveloper.getId());
         return convertToResponseDto(savedDeveloper);
@@ -99,7 +101,7 @@ public class DeveloperServiceImpl implements DeveloperService {
         Map<String, Object> payload = new HashMap<>();
         payload.put("oldData", oldData);
         payload.put("newData", createDeveloperPayload(updatedDeveloper));
-        auditLogService.logAction("UPDATE", "DEVELOPER", updatedDeveloper.getId(), actorName, payload);
+        auditLogService.logAction(AuditAction.UPDATE, EntityType.DEVELOPER, updatedDeveloper.getId(), actorName, payload);
         
         log.info("Developer updated successfully with ID: {}", updatedDeveloper.getId());
         return convertToResponseDto(updatedDeveloper);
@@ -126,7 +128,7 @@ public class DeveloperServiceImpl implements DeveloperService {
         developerRepository.delete(developer);
         
         // Log the deletion
-        auditLogService.logAction("DELETE", "DEVELOPER", developerId, actorName, payload);
+        auditLogService.logAction(AuditAction.DELETE, EntityType.DEVELOPER, developerId, actorName, payload);
         
         log.info("Developer deleted successfully with ID: {}", developerId);
     }
@@ -225,7 +227,7 @@ public class DeveloperServiceImpl implements DeveloperService {
         payload.put("action", "ADD_SKILL");
         payload.put("skill", skill.toLowerCase());
         payload.put("developerId", developerId);
-        auditLogService.logAction("UPDATE", "DEVELOPER", developerId, actorName, payload);
+        auditLogService.logAction(AuditAction.UPDATE, EntityType.DEVELOPER, developerId, actorName, payload);
         
         return convertToResponseDto(updatedDeveloper);
     }
@@ -245,7 +247,7 @@ public class DeveloperServiceImpl implements DeveloperService {
         payload.put("action", "REMOVE_SKILL");
         payload.put("skill", skill.toLowerCase());
         payload.put("developerId", developerId);
-        auditLogService.logAction("UPDATE", "DEVELOPER", developerId, actorName, payload);
+        auditLogService.logAction(AuditAction.UPDATE, EntityType.DEVELOPER, developerId, actorName, payload);
         
         return convertToResponseDto(updatedDeveloper);
     }
@@ -276,7 +278,7 @@ public class DeveloperServiceImpl implements DeveloperService {
         payload.put("oldSkills", oldSkills);
         payload.put("newSkills", normalizedSkills);
         payload.put("developerId", developerId);
-        auditLogService.logAction("UPDATE", "DEVELOPER", developerId, actorName, payload);
+        auditLogService.logAction(AuditAction.UPDATE, EntityType.DEVELOPER, developerId, actorName, payload);
         
         return convertToResponseDto(updatedDeveloper);
     }
