@@ -1,6 +1,8 @@
 package com.buildmaster.projecttracker.exception;
 
+import com.mongodb.MongoSocketReadTimeoutException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mongodb.TransientMongoDbException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -95,6 +97,17 @@ public class GlobalExceptionHandler {
                 .path("/api")
                 .build();
                 
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+    @ExceptionHandler(MongoSocketReadTimeoutException.class)
+    public ResponseEntity<ErrorResponse> handleMongoSocketReadTimeoutException(MongoSocketReadTimeoutException exception){
+        log.info("Mongo db exception timeout: ",exception);
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .error("Timeout while receiving message")
+                .path("/")
+                .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 }
