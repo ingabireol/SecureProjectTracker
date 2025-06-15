@@ -1,5 +1,6 @@
 package com.buildmaster.projecttracker.model;
 
+import com.buildmaster.projecttracker.model.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -44,6 +45,10 @@ public class Developer {
     
     @OneToMany(mappedBy = "assignedDeveloper", fetch = FetchType.LAZY)
     private List<Task> assignedTasks = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", unique = true)
+    private User user;
     
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
